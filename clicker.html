@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Click Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .timer {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .counter {
+            font-size: 150px;
+        }
+
+        #buttonContainer {
+            position: relative;
+            width: 400px;
+            height: 150px;
+            margin: 0 auto;
+        }
+
+        #startButton,
+        #clickButton {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 400px;
+            height: 200px;
+            font-size: 80px;
+        }
+
+        #startButton {
+            z-index: 1;
+        }
+
+        #clickButton {
+            z-index: 2;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Click Game</h1>
+        <p class="timer">Time Remaining: <span id="timer">10</span> seconds</p>
+        <div id="buttonContainer">
+            <button id="startButton">Start Game</button>
+            <button id="clickButton">Click Me!</button>
+        </div>
+        <p class="counter">Clicks: <span id="clickCount">0</span></p>
+    </div>
+
+    <script>
+        var timerElement = document.getElementById('timer');
+        var startButton = document.getElementById('startButton');
+        var clickButton = document.getElementById('clickButton');
+        var clickCountElement = document.getElementById('clickCount');
+
+        var timeLeft = 10;
+        var clickCount = 0;
+        var timerInterval;
+
+        function startTimer() {
+            timerInterval = setInterval(updateTimer, 1000);
+            clickButton.disabled = false;
+            clickButton.addEventListener('click', incrementClickCount);
+        }
+
+        function updateTimer() {
+            timeLeft--;
+            timerElement.textContent = timeLeft + ' seconds';
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                clickButton.disabled = true;
+                clickButton.removeEventListener('click', incrementClickCount);
+                showScoreSubmission(); // Call the function to show the score submission overlay
+                submitScore();
+            }
+        }
+
+        function incrementClickCount() {
+            clickCount++;
+            clickCountElement.textContent = clickCount;
+        }
+
+        function submitScore() {
+            // Implement the logic to submit the score to your leaderboard here
+            // You can make an API call to your backend or AWS Lambda function
+            // to update the leaderboard with the player's score and name.
+        }
+
+        function startGame() {
+            startButton.style.display = 'none'; // Hide the start button
+            clickButton.style.display = 'block'; // Show the click button
+            startTimer(); // Start the timer
+        }
+
+        // Add event listener to the start button
+        startButton.addEventListener('click', startGame);
+    </script>
+    <script src="showScoreSubmission.js"></script>
+    <script src="showLeaderboard.js"></script>
+</body>
+</html>
